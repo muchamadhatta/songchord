@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class SongVersion extends Model
 {
+    protected $table = 'song_versions';
+
     protected $guarded = [];
 
     public function song()

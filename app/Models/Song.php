@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Song extends Model
 {
+    protected $table = 'songs';
+
     protected $guarded = [];
 
     /** artist yang membawakan lagu */

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SongSection extends Model
 {
+    protected $table = 'sections';
     protected $guarded = [];
 
     public function version()
@@ -15,6 +16,7 @@ class SongSection extends Model
 
     public function lines()
     {
-        return $this->hasMany(SongLine::class);
+        return $this->hasMany(SongLine::class, 'section_id');
     }
+    
 }
