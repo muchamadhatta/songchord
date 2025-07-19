@@ -3,8 +3,8 @@
 use App\Http\Controllers\Api\{
     AuthController,
     SongController,
-    ArtistController,
-    FavoriteController
+    // ArtistController,
+    // FavoriteController
 };
 use Illuminate\Support\Facades\Route;
 
@@ -22,19 +22,25 @@ Route::prefix('v1')->group(function () {
         Route::post('songs',           [SongController::class, 'store']);
         Route::patch('songs/{song}',   [SongController::class, 'update']);
         Route::delete('songs/{song}',  [SongController::class, 'destroy']);
+        Route::post('/songs/{song}/versions', [VersionController::class, 'store']);
+        Route::post('/versions/{version}/sections', [SectionController::class, 'store']);
+        Route::post('/sections/{section}/lines', [LineController::class, 'store']);
+
+        
+
     });
 
-    /* ---------- Artists ---------- */
-    Route::get('artists',                 [ArtistController::class, 'index']);
-    Route::get('artists/{artist}/songs',  [ArtistController::class, 'songs']);
+    // /* ---------- Artists ---------- */
+    // Route::get('artists',                 [ArtistController::class, 'index']);
+    // Route::get('artists/{artist}/songs',  [ArtistController::class, 'songs']);
 
-    Route::middleware(['auth:sanctum', 'role:CONTRIBUTOR,ADMIN'])
-          ->post('artists', [ArtistController::class, 'store']);
+    // Route::middleware(['auth:sanctum', 'role:CONTRIBUTOR,ADMIN'])
+    //       ->post('artists', [ArtistController::class, 'store']);
 
-    /* ---------- Favorites ---------- */
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::get('users/{user}/favorites',    [FavoriteController::class, 'index'])->middleware('can:view,user');
-        Route::post('favorites',                [FavoriteController::class, 'store']);
-        Route::delete('favorites/{song}',       [FavoriteController::class, 'destroy']);
-    });
+    // /* ---------- Favorites ---------- */
+    // Route::middleware('auth:sanctum')->group(function () {
+    //     Route::get('users/{user}/favorites',    [FavoriteController::class, 'index'])->middleware('can:view,user');
+    //     Route::post('favorites',                [FavoriteController::class, 'store']);
+    //     Route::delete('favorites/{song}',       [FavoriteController::class, 'destroy']);
+    // });
 });

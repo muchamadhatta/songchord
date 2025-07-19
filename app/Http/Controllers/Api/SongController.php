@@ -40,16 +40,14 @@ class SongController extends Controller
     {
         $song = Song::create($req->validated() + ['created_by' => $req->user()->id]);
 
-        // buat version & section default jika diperlukan...
-        // $song->versions()->create(...);
-
         return new SongResource($song->load('artist'));
     }
+    
 
     /* PATCH /songs/{id} */
     public function update(UpdateSongRequest $req, Song $song)
     {
-        $this->authorize('update', $song);
+        // $this->authorize('update', $song);
         $song->update($req->validated());
 
         return new SongResource($song->refresh()->load('artist'));
@@ -58,7 +56,7 @@ class SongController extends Controller
     /* DELETE /songs/{id} */
     public function destroy(Song $song)
     {
-        $this->authorize('delete', $song);
+        // $this->authorize('delete', $song);
         $song->delete();
 
         return response()->noContent();
