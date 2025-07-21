@@ -32,8 +32,13 @@ services:
         value: root
       - key: DB_PASSWORD
         secret: true
+    startCommand: |
+      php artisan config:cache && \
+      php artisan migrate --force && \
+      apache2-foreground
 
 databases:
   - name: laravel-db
     databaseName: db_songchord
     user: root
+    ipAllowList: []  # default: allow internal access only
