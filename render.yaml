@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: laravel-app
+    env: docker
+    plan: free
+    branch: main
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: APP_NAME
+        value: Laravel
+      - key: APP_ENV
+        value: local
+      - key: APP_KEY
+        value: base64:8AGpZijCGGkypEiK8AjW9PSH5xJVHOkR8q2cKi5+/PY=
+      - key: APP_DEBUG
+        value: 'true'
+      - key: APP_URL
+        value: https://laravel-app.onrender.com
+      - key: LOG_CHANNEL
+        value: stack
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromService:
+          type: pserv
+          name: laravel-db
+      - key: DB_PORT
+        value: 3306
+      - key: DB_DATABASE
+        value: db_songchord
+      - key: DB_USERNAME
+        value: root
+      - key: DB_PASSWORD
+        secret: true
+
+databases:
+  - name: laravel-db
+    databaseName: db_songchord
+    user: root

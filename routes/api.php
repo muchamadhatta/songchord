@@ -3,6 +3,9 @@
 use App\Http\Controllers\Api\{
     AuthController,
     SongController,
+    VersionController,
+    SectionController,
+    LineController,
     // ArtistController,
     // FavoriteController
 };
@@ -25,9 +28,6 @@ Route::prefix('v1')->group(function () {
         Route::post('/songs/{song}/versions', [VersionController::class, 'store']);
         Route::post('/versions/{version}/sections', [SectionController::class, 'store']);
         Route::post('/sections/{section}/lines', [LineController::class, 'store']);
-
-        
-
     });
 
     // /* ---------- Artists ---------- */
