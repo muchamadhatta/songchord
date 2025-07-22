@@ -18,20 +18,25 @@ services:
         value: https://laravel-app.onrender.com
       - key: LOG_CHANNEL
         value: stack
+
+      # --- PostgreSQL Settings ---
       - key: DB_CONNECTION
-        value: mysql
+        value: pgsql
       - key: DB_HOST
-        fromService:
-          type: pserv
+        fromDatabase:
           name: laravel-db
       - key: DB_PORT
-        value: 3306
+        value: 5432
       - key: DB_DATABASE
-        value: db_songchord
+        fromDatabase:
+          name: laravel-db
       - key: DB_USERNAME
-        value: root
+        fromDatabase:
+          name: laravel-db
       - key: DB_PASSWORD
-        secret: true
+        fromDatabase:
+          name: laravel-db
+
     startCommand: |
       php artisan config:cache && \
       php artisan migrate --force && \
@@ -40,5 +45,5 @@ services:
 databases:
   - name: laravel-db
     databaseName: db_songchord
-    user: root
-    ipAllowList: []  # default: allow internal access only
+    user: laraveluser   # nama user bisa kamu tentukan, jangan 'root'
+    ipAllowList: []     # allow internal only

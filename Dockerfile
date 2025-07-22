@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     libzip-dev \
     default-mysql-client \
-    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
+    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd zip
 
 RUN a2enmod rewrite
 
