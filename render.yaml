@@ -9,7 +9,7 @@ services:
       - key: APP_NAME
         value: Laravel
       - key: APP_ENV
-        value: local
+        value: production
       - key: APP_KEY
         value: base64:8AGpZijCGGkypEiK8AjW9PSH5xJVHOkR8q2cKi5+/PY=
       - key: APP_DEBUG
@@ -25,25 +25,30 @@ services:
       - key: DB_HOST
         fromDatabase:
           name: laravel-db
+          property: host
       - key: DB_PORT
         value: 5432
       - key: DB_DATABASE
         fromDatabase:
           name: laravel-db
+          property: database
       - key: DB_USERNAME
         fromDatabase:
           name: laravel-db
+          property: user
       - key: DB_PASSWORD
         fromDatabase:
           name: laravel-db
+          property: password
 
-    startCommand: |
-      php artisan config:cache && \
-      php artisan migrate --force && \
-      apache2-foreground
+startCommand: |
+  php artisan config:cache && \
+  php artisan migrate --force && \
+  php artisan db:seed --force && \
+  apache2-foreground
 
 databases:
   - name: laravel-db
     databaseName: db_songchord
-    user: laraveluser   # nama user bisa kamu tentukan, jangan 'root'
-    ipAllowList: []     # allow internal only
+    user: laraveluser
+    ipAllowList: []
