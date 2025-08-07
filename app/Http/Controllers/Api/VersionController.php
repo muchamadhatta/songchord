@@ -3,24 +3,21 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreSongRequest;
-use App\Http\Requests\UpdateSongRequest;
-use App\Http\Resources\SongResource;
+use App\Http\Requests\StoreVersionRequest;
+use App\Http\Resources\VersionResource;
 use App\Models\Song;
 use Illuminate\Http\Request;
 
 class VersionController extends Controller
 {
-
-    public function store(Request $request, Song $song)
+    public function store(StoreVersionRequest $req, Song $song)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'is_default' => 'boolean'
-        ]);
+        $data = $req->validated();
+        $data['created_by'] = $req->user()->id;
 
-        $version = $song->versions()->create($validated);
+        $songVersion = $song->versions()->create($data);
 
-        return response()->json($version->load('song'), 201);
+        return new VersionResource($songVersion->load('song'));
     }
 }
+
