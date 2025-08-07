@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 
 class SongController extends Controller
 {
-    /* GET /songs */
     public function index(Request $req)
     {
         $songs = Song::with('artist')
@@ -24,18 +23,16 @@ class SongController extends Controller
         return SongResource::collection($songs);
     }
 
-    /* GET /songs/{id} */
     public function show(Song $song)
     {
         $song->load([
             'artist',
-            'defaultVersion.sections.lines.chordPositions' // eager load kedalaman
+            'defaultVersion.sections.lines.chordPositions'
         ]);
 
         return new SongResource($song);
     }
 
-    /* POST /songs */
     public function store(StoreSongRequest $req)
     {
         $song = Song::create($req->validated() + ['created_by' => $req->user()->id]);
@@ -44,7 +41,6 @@ class SongController extends Controller
     }
     
 
-    /* PATCH /songs/{id} */
     public function update(UpdateSongRequest $req, Song $song)
     {
         // $this->authorize('update', $song);
@@ -53,7 +49,6 @@ class SongController extends Controller
         return new SongResource($song->refresh()->load('artist'));
     }
 
-    /* DELETE /songs/{id} */
     public function destroy(Song $song)
     {
         // $this->authorize('delete', $song);
