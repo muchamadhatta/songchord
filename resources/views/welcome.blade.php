@@ -385,7 +385,7 @@
                 <div class="nav-links">
                     <a href="#" class="nav-link">Browse Songs</a>
                     <a href="#" class="nav-link">API Docs</a>
-                    <a href="#" class="nav-link">Login</a>
+                    <a href="{{ route('login') }}" class="nav-link">Login</a>
                 </div>
             </nav>
         </div>
