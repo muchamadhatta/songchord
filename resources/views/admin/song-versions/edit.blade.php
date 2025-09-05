@@ -805,13 +805,46 @@
 
     // Section movement functions
     function moveSection(sectionId, direction) {
-        // Implementation for moving sections up/down
-        console.log(`Moving section ${sectionId} ${direction}`);
+        const data = {
+            direction: direction
+        };
+
+        updateAutoSaveStatus('saving');
+        ajaxRequest(`${baseUrl}/sections/${sectionId}/move`, 'PATCH', data)
+            .then(response => {
+                if (response.success) {
+                    // Reload the page to show the new order
+                    // Or we could implement dynamic reordering in the UI
+                    location.reload();
+                } else {
+                    updateAutoSaveStatus('error');
+                    console.error('Failed to move section:', response);
+                }
+            })
+            .catch(error => {
+                updateAutoSaveStatus('error');
+                console.error('Error moving section:', error);
+            });
     }
 
     function duplicateSection(sectionId) {
-        // Implementation for duplicating sections
-        console.log(`Duplicating section ${sectionId}`);
+        if (confirm('Duplicate this section with all its content?')) {
+            updateAutoSaveStatus('saving');
+            ajaxRequest(`${baseUrl}/sections/${sectionId}/duplicate`, 'POST', {})
+                .then(response => {
+                    if (response.success) {
+                        // Reload to show the duplicated section
+                        location.reload();
+                    } else {
+                        updateAutoSaveStatus('error');
+                        console.error('Failed to duplicate section:', response);
+                    }
+                })
+                .catch(error => {
+                    updateAutoSaveStatus('error');
+                    console.error('Error duplicating section:', error);
+                });
+        }
     }
 
     // Preview mode

@@ -457,6 +457,94 @@ class SongVersionController extends Controller
     }
 
     /**
+     * Move section up or down via AJAX
+     */
+    public function moveSection(Request $request, SongSection $section)
+    {
+        $validated = $request->validate([
+            'direction' => 'required|in:up,down'
+        ]);
+
+        $direction = $validated['direction'];
+        $currentOrder = $section->section_order;
+        $versionId = $section->song_version_id;
+
+        if ($direction === 'up' && $currentOrder > 1) {
+            // Find the section above
+            $sectionAbove = SongSection::where('song_version_id', $versionId)
+                ->where('section_order', $currentOrder - 1)
+                ->first();
+
+            if ($sectionAbove) {
+                // Swap orders
+                $sectionAbove->update(['section_order' => $currentOrder]);
+                $section->update(['section_order' => $currentOrder - 1]);
+            }
+        } elseif ($direction === 'down') {
+            // Find the section below
+            $sectionBelow = SongSection::where('song_version_id', $versionId)
+                ->where('section_order', $currentOrder + 1)
+                ->first();
+
+            if ($sectionBelow) {
+                // Swap orders
+                $sectionBelow->update(['section_order' => $currentOrder]);
+                $section->update(['section_order' => $currentOrder + 1]);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'section' => $section->fresh(),
+            'message' => 'Section moved successfully'
+        ]);
+    }
+
+    /**
+     * Duplicate section via AJAX
+     */
+    public function duplicateSection(SongSection $section)
+    {
+        $versionId = $section->song_version_id;
+        
+        // Get the highest section order and add 1
+        $maxOrder = SongSection::where('song_version_id', $versionId)
+            ->max('section_order');
+        
+        // Create duplicate section
+        $duplicatedSection = SongSection::create([
+            'song_version_id' => $versionId,
+            'section_type' => $section->section_type . ' (Copy)',
+            'section_order' => $maxOrder + 1
+        ]);
+
+        // Duplicate all lines
+        foreach ($section->lines as $line) {
+            $duplicatedLine = SongLine::create([
+                'section_id' => $duplicatedSection->id,
+                'line_order' => $line->line_order,
+                'lyrics_text' => $line->lyrics_text
+            ]);
+
+            // Duplicate all chord positions
+            foreach ($line->chordPositions as $chord) {
+                ChordPosition::create([
+                    'line_id' => $duplicatedLine->id,
+                    'char_index' => $chord->char_index,
+                    'chord' => $chord->chord,
+                    'display_order' => $chord->display_order
+                ]);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'section' => $duplicatedSection->load(['lines.chordPositions']),
+            'message' => 'Section duplicated successfully'
+        ]);
+    }
+
+    /**
      * Delete section via AJAX
      */
     public function deleteSection(SongSection $section)

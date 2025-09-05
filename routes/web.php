@@ -50,6 +50,8 @@ Route::middleware(['auth'])->group(function () {
         // AJAX API Routes for Structure Editing
         Route::post('songs/{song}/versions/{version}/sections', [SongVersionController::class, 'storeSection']);
         Route::patch('sections/{section}', [SongVersionController::class, 'updateSection']);
+        Route::patch('sections/{section}/move', [SongVersionController::class, 'moveSection']);
+        Route::post('sections/{section}/duplicate', [SongVersionController::class, 'duplicateSection']);
         Route::delete('sections/{section}', [SongVersionController::class, 'deleteSection']);
         
         Route::post('sections/{section}/lines', [SongVersionController::class, 'storeLine']);
